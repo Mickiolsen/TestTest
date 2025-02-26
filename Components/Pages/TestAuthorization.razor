@@ -1,0 +1,60 @@
+﻿@page "/testadmin"
+
+@attribute [StreamRendering]
+
+@inject AuthenticationStateProvider _authenticationStateProvider;
+@inject IServiceProvider _serviceProvider;
+
+<PageTitle>TestAuthorization</PageTitle>
+
+<h1>Authorization Test Page</h1>
+
+@if (_isAuthenticated)
+{
+    @if (_isAdmin)
+    {
+        <div>
+            <h1>Hello, @_userName</h1>
+            <h3>You are admin!</h3>
+        </div>
+    }
+    else
+    {
+        <div>
+            <h1>Hello, @_userName</h1>
+            <h3>You are not admin sadly.</h3>
+        </div>
+    }
+}
+else
+{
+    <div>
+        <h1>Hello, Guest</h1>
+        <h3>Please log in to see more content.</h3>
+    </div>
+}
+
+@code {
+    private bool _isAuthenticated;
+    private bool _isAdmin;
+    private string _userName;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Get Authentication State
+        var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        // Check authentication
+        _isAuthenticated = user.Identity?.IsAuthenticated ?? false;
+
+        if (_isAuthenticated)
+        {
+            // Check if user is admin
+            _isAdmin = user.IsInRole("Admin");
+
+            // Set username
+            _userName = user.Identity?.Name ?? "Unknown User";
+        }
+    }
+}

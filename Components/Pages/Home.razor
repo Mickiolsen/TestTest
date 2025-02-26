@@ -1,0 +1,15 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.Components.Authorization
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, world!</h1>
+
+<AuthorizeView>
+    <Authorized>
+        <p>Welcome back, authenticated user!</p>
+    </Authorized>
+    <NotAuthorized>
+        <p>Please log in to access more features.</p>
+    </NotAuthorized>
+</AuthorizeView>

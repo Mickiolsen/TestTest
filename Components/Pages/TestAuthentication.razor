@@ -1,0 +1,39 @@
+﻿@page "/testauth"
+
+@inject AuthenticationStateProvider _authenticationStateProvider;
+@inject IServiceProvider _serviceProvider;
+
+<PageTitle>TestAuthentication</PageTitle>
+
+<h1>Authentication Test Page</h1>
+
+@if (_isAuthenticated)
+{
+    <div>
+        <h1>Hello, @_userName</h1>
+        You are authenticated.
+    </div>
+}
+else
+{
+    <div>
+        You are not authenticated.
+    </div>
+}
+
+@code {
+    private bool _isAuthenticated;
+    private string _userName;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Get Authentication State
+        var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+
+        // Get current user
+        var user = authState.User;
+
+        _userName = user.Identity.Name;
+        _isAuthenticated = user.Identity.IsAuthenticated;
+    }
+}
